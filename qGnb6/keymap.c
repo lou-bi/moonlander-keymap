@@ -9,6 +9,29 @@ void housekeeping_task_user(void) {
   achordion_task();
 }
 
+bool achordion_chord(
+  uint16_t tap_hold_keycode,
+  keyrecord_t* tap_hold_record,
+  uint16_t other_keycode,
+  keyrecord_t* other_record
+) {
+  // Only apply for keys located in the HMR
+  if (
+    tap_hold_keycode == KC_A ||
+    tap_hold_keycode == KC_R ||
+    tap_hold_keycode == KC_S ||
+    tap_hold_keycode == KC_T ||
+
+    tap_hold_keycode == KC_N ||
+    tap_hold_keycode == KC_E ||
+    tap_hold_keycode == KC_I ||
+    tap_hold_keycode == KC_O
+  ) {
+      return achordion_opposite_hands(tap_hold_record, other_record);
+    }
+  return true
+}
+
 enum custom_keycodes {
   RGB_SLD = ML_SAFE_RANGE,
   ST_MACRO_0,
