@@ -29,7 +29,7 @@ bool achordion_chord(
   ) {
       return achordion_opposite_hands(tap_hold_record, other_record);
     }
-  return true
+  return true;
 }
 
 enum custom_keycodes {
