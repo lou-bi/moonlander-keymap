@@ -15,21 +15,12 @@ bool achordion_chord(
   uint16_t other_keycode,
   keyrecord_t* other_record
 ) {
-  // Only apply for keys located in the HMR
-  if (
-    tap_hold_keycode == KC_A ||
-    tap_hold_keycode == KC_R ||
-    tap_hold_keycode == KC_S ||
-    tap_hold_keycode == KC_T ||
+  // Also allow same-hand holds when the other key is in the rows below the
+  // alphas. I need the `% (MATRIX_ROWS / 2)` because my keyboard is split.
+  if (other_record->event.key.row % (MATRIX_ROWS / 2) >= 4) { return true; }
 
-    tap_hold_keycode == KC_N ||
-    tap_hold_keycode == KC_E ||
-    tap_hold_keycode == KC_I ||
-    tap_hold_keycode == KC_O
-  ) {
-      return achordion_opposite_hands(tap_hold_record, other_record);
-    }
-  return false;
+  // Otherwise, follow the opposite hands rule.
+  return achordion_opposite_hands(tap_hold_record, other_record);
 }
 
 enum custom_keycodes {
