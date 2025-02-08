@@ -1,27 +1,15 @@
 #include QMK_KEYBOARD_H
 #include "version.h"
 #include "i18n.h"
-#include "features/achordion.h"
 #define MOON_LED_LEVEL LED_LEVEL
 #define ML_SAFE_RANGE SAFE_RANGE
 
-void housekeeping_task_user(void) {
-  achordion_task();
-}
-
-bool achordion_chord(
-  uint16_t tap_hold_keycode,
-  keyrecord_t* tap_hold_record,
-  uint16_t other_keycode,
-  keyrecord_t* other_record
-) {
-  // Also allow same-hand holds when the other key is in the rows below the
-  // alphas. I need the `% (MATRIX_ROWS / 2)` because my keyboard is split.
-  if (other_record->event.key.row % (MATRIX_ROWS / 2) >= 4) { return true; }
-
-  // Otherwise, follow the opposite hands rule.
-  return achordion_opposite_hands(tap_hold_record, other_record);
-}
+#undef QUICK_TAP_TERM
+#undef TAPPING_TERM
+#define TAPPING_TERM 250
+#define QUICK_TAP_TERM 120
+#define PERMISSIVE_HOLD
+#define IGNORE_MOD_TAP_INTERRUPT
 
 enum custom_keycodes {
   RGB_SLD = ML_SAFE_RANGE,
@@ -35,8 +23,6 @@ enum custom_keycodes {
   ST_MACRO_7,
   ST_MACRO_8,
 };
-
-
 
 enum tap_dance_codes {
   DANCE_0,
@@ -192,7 +178,6 @@ bool rgb_matrix_indicators_user(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  if (!process_achordion(keycode, record)) { return false; }
   switch (keycode) {
     case ST_MACRO_0:
     if (record->event.pressed) {
